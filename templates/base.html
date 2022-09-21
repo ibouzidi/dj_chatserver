@@ -1,0 +1,36 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Django chat server real time</title>
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+    {% include 'partials/base_css.html' %}
+    {% include 'partials/base_js.html' %}
+    {% include 'partials/header.html' %}
+
+    <!-- Body -->
+    <style>
+        .main {
+            min-height: 100vh;
+            height: 100%;
+        }
+    </style>
+    <div class="main">
+        {% block content %}
+        {% endblock content %}
+    </div>
+    <!-- End body -->
+
+    {% include 'partials/footer.html' %}
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+</body>
+</html>
