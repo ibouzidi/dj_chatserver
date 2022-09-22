@@ -1,5 +1,6 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, \
+    PermissionsMixin
 
 
 # create a new user
@@ -40,7 +41,7 @@ def get_default_profile_image():
     return "user_icon/user_icon.png"
 
 
-class Account(AbstractBaseUser):
+class Account(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(verbose_name="email", max_length=60, unique=True)
     username = models.CharField(max_length=30, unique=True)
     date_joined = models.DateTimeField(verbose_name="date joined",

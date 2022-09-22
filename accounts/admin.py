@@ -10,7 +10,7 @@ class AccountAdmin(UserAdmin):
     search_fields = ('email', 'username')
     readonly_fields = ('id', 'date_joined', 'last_login')
 
-    filter_horizontal = ()
+    filter_horizontal = ('groups', 'user_permissions',)
     list_filter = ()
     fieldsets = ()
 
