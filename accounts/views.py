@@ -1,3 +1,4 @@
+from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth import login, authenticate, logout
@@ -116,4 +117,22 @@ def account_view(request, *args, **kwargs):
         context['is_friend'] = is_friend
         context['BASE_URL'] = settings.BASE_URL
         return render(request, "accounts/account.html", context)
+
+
+def account_search_view(request, *args, **kwargs):
+    context = {}
+    if request.method == "GET":
+        search_query = request.GET.get("q")
+        if len(search_query) > 0:
+            search_results = Account.objects.filter(username__icontains=search_query, email__icontains=search_query)
+            print("search_results")
+            print(search_results)
+            accounts = []
+            for account in search_results:
+                accounts.append((account, False))
+            context['accounts'] = accounts
+            return render(request, 'accounts/search_results.html', context)
+    return render(request, 'accounts/search_results.html', context)
+
+
 

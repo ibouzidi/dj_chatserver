@@ -19,10 +19,17 @@ from django.contrib import admin
 from django.urls import path, include
 
 
+from accounts.views import (
+    account_search_view,
+)
+
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('personal.urls')),
-    path('accounts/', include('accounts.urls')),
+    path('accounts/', include('accounts.urls', namespace='accounts')),
+    path('search/', account_search_view, name='search'),
+
 ]
 
 

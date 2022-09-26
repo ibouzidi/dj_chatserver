@@ -4,6 +4,8 @@ from django.contrib.auth import views as auth_views
 from . import views
 
 
+app_name = 'accounts'
+
 urlpatterns = [
     path('register/', views.register, name='register'),
     path('login/', views.login_view, name='login'),
@@ -32,6 +34,6 @@ urlpatterns = [
         template_name='password_reset/password_reset_complete.html'),
          name='password_reset_complete'),
 
-    path('<user_id>/', views.account_view, name="profile"),
+    path('profile/<user_id>/', views.account_view, name="profile"),
 
 ]
