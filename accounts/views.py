@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth import login, authenticate, logout
 from accounts.forms import RegistrationForm, AccountAuthenticationForm
+from django.contrib import messages
 
 
 def register(request, *args, **kwargs):
@@ -34,15 +35,19 @@ def register(request, *args, **kwargs):
 
 def logout_(request):
     logout(request)
+    messages.success(request, 'You have been succesfully disconnected')
     return redirect("home")
 
 
-def login_(request, *args, **kwargs):
+def login_view(request, *args, **kwargs):
     context = {}
 
     user = request.user
     if user.is_authenticated:
         return redirect("home")
+
+    destination = get_redirect_if_exists(request)
+    print("destination: " + str(destination))
 
     if request.POST:
         form = AccountAuthenticationForm(request.POST)
@@ -50,17 +55,18 @@ def login_(request, *args, **kwargs):
             email = request.POST['email']
             password = request.POST['password']
             user = authenticate(email=email, password=password)
-            print("test")
+
             if user:
                 login(request, user)
-                print("test222")
-                # destination = get_redirect_if_exists(request)
-                # if destination:  # if destination != None
-                #     return redirect(destination)
+                if destination:
+                    return redirect(destination)
                 return redirect("home")
-        else:
-            form = AccountAuthenticationForm()
-            context['login_form'] = form
+
+    else:
+        form = AccountAuthenticationForm()
+
+    context['login_form'] = form
+
     return render(request, "accounts/login.html", context)
 
 
