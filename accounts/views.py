@@ -1,4 +1,3 @@
-from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth import login, authenticate, logout
@@ -6,7 +5,8 @@ from django.contrib import messages
 from django.conf import settings
 
 from accounts.models import Account
-from accounts.forms import RegistrationForm, AccountAuthenticationForm
+from accounts.forms import RegistrationForm, AccountAuthenticationForm, \
+    AccountUpdateForm
 
 
 def register(request, *args, **kwargs):
@@ -124,9 +124,9 @@ def account_search_view(request, *args, **kwargs):
     if request.method == "GET":
         search_query = request.GET.get("q")
         if len(search_query) > 0:
-            search_results = Account.objects.filter(username__icontains=search_query, email__icontains=search_query)
-            print("search_results")
-            print(search_results)
+            search_results = Account.objects.filter(
+                username__icontains=search_query,
+                email__icontains=search_query)
             accounts = []
             for account in search_results:
                 accounts.append((account, False))
@@ -135,4 +135,44 @@ def account_search_view(request, *args, **kwargs):
     return render(request, 'accounts/search_results.html', context)
 
 
-
+def account_edit_view(request, *args, **kwargs):
+    if not request.user.is_authenticated:
+        return redirect("accounts:login")
+    user_id = kwargs.get("user_id")
+    account = Account.objects.get(pk=user_id)
+    if account.pk != request.user.pk:
+        return HttpResponse("You cannot edit someone elses profile.")
+    context = {}
+    if request.POST:
+        form = AccountUpdateForm(request.POST, request.FILES,
+                                 instance=request.user)
+        if form.is_valid():
+            # delete old profile image so the name is preserved
+            account.profile_image.delete()
+            form.save()
+            return redirect("accounts:profile", user_id=account.pk)
+        else:
+            form = AccountUpdateForm(request.POST, instance=request.user,
+                                     initial={
+                                         "id": account.pk,
+                                         "email": account.email,
+                                         "username": account.username,
+                                         "profile_image": account.profile_image,
+                                         "hide_email": account.hide_email,
+                                     }
+                                     )
+            context['form'] = form
+    else:
+        form = AccountUpdateForm(
+            initial={
+                "id": account.pk,
+                "email": account.email,
+                "username": account.username,
+                "profile_image": account.profile_image,
+                "hide_email": account.hide_email,
+            }
+        )
+        context['form'] = form
+    context[
+        'DATA_UPLOAD_MAX_MEMORY_SIZE'] = settings.DATA_UPLOAD_MAX_MEMORY_SIZE
+    return render(request, "accounts/edit_account.html", context)

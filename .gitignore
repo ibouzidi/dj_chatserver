@@ -5,3 +5,5 @@ migrations/
 /static/
 __pycache__/
 /media/
+/media_cdn/user_icon
+/media_cdn/profile_images

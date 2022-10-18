@@ -27,7 +27,7 @@ from accounts.views import (
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('personal.urls')),
-    path('accounts/', include('accounts.urls', namespace='accounts')),
+    path('accounts/', include('accounts.urls')),
     path('search/', account_search_view, name='search'),
 
 ]

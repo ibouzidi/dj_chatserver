@@ -34,6 +34,7 @@ urlpatterns = [
         template_name='password_reset/password_reset_complete.html'),
          name='password_reset_complete'),
 
-    path('profile/<user_id>/', views.account_view, name="profile"),
+    path('<user_id>/', views.account_view, name="profile"),
+    path('edit/<user_id>/', views.account_edit_view, name="edit-profile"),
 
 ]
