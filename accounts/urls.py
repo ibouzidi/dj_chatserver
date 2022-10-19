@@ -36,5 +36,6 @@ urlpatterns = [
 
     path('<user_id>/', views.account_view, name="profile"),
     path('edit/<user_id>/', views.account_edit_view, name="edit-profile"),
+    path('edit/<user_id>/cropImage/', views.crop_image, name="crop-image"),
 
 ]
